@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import shortid from "shortid";
+import { v4 as uuidv4 } from "uuid";
 
 class App extends Component {
   state = {
@@ -17,7 +17,7 @@ class App extends Component {
   getValue = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState((prevState) => (prevState[name] = value));
+    this.setState((state) => (state[name] = value));
   };
 
   getContact = (e) => {
@@ -31,7 +31,7 @@ class App extends Component {
       return;
     }
     this.setState(({ contacts, name, number }) => {
-      return contacts.push({ id: shortid.generate(), name, number });
+      return contacts.push({ id: uuidv4(), name, number });
     });
     this.resetState();
   };
@@ -39,10 +39,10 @@ class App extends Component {
   findContact = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState((prevState) => (prevState[name] = value));
-    this.setState((prevState) => {
-      const arrayOfContacts = [...prevState.contacts];
-      prevState.contacts = arrayOfContacts.filter((item) =>
+    this.setState((state) => (state[name] = value));
+    this.setState((state) => {
+      const arrayOfContacts = [...state.contacts];
+      state.contacts = arrayOfContacts.filter((item) =>
         item.name.toLowerCase().includes(value.toLowerCase())
       );
     });
@@ -51,8 +51,8 @@ class App extends Component {
   deleteContact = (e) => {
     const target = e.target.name;
     console.log("target: ", target);
-    this.setState((prevState) => {
-      prevState.contacts = prevState.contacts.filter((item) => {
+    this.setState((state) => {
+      state.contacts = state.contacts.filter((item) => {
         return item.id !== target;
       });
     });
@@ -61,9 +61,9 @@ class App extends Component {
 
   resetState = () => {
     return this.setState(
-      (prevState) =>
-        (prevState = {
-          contacts: [...prevState.contacts],
+      (state) =>
+        (state = {
+          contacts: [...state.contacts],
           filter: "",
           name: "",
           number: "",
