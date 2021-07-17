@@ -16,8 +16,7 @@ class App extends Component {
 
   getValue = (e) => {
     const name = e.target.name;
-    const value = e.target.value;
-    this.setState((state) => (state[name] = value));
+    this.setState((prevState) => (prevState[name] = e.target.value));
   };
 
   getContact = (e) => {
@@ -34,17 +33,6 @@ class App extends Component {
       return contacts.push({ id: uuidv4(), name, number });
     });
     this.resetState();
-  };
-
-  findContact = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    this.setState((prevState) => (prevState[name] = value));
-    this.setState(({ contacts }) => ({
-      contacts: contacts.filter((item) =>
-        item.name.toLowerCase().includes(value.toLowerCase())
-      ),
-    }));
   };
 
   deleteContact = (contactId) => {
@@ -69,6 +57,12 @@ class App extends Component {
 
   render() {
     const { name, contacts, number, filter } = this.state;
+
+    const normalizedFilter = filter.toLowerCase();
+    const visibleContacts = contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+
     return (
       <>
         <h1>Phonebook</h1>
@@ -106,12 +100,12 @@ class App extends Component {
             type="text"
             name="filter"
             value={filter}
-            onChange={this.findContact}
+            onChange={this.getValue}
           />
         </label>
         {contacts && (
           <ul>
-            {contacts.map(({ id, name, number }) => (
+            {visibleContacts.map(({ id, name, number }) => (
               <li key={id}>
                 <span>
                   {name}: {number}
