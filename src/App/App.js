@@ -15,8 +15,8 @@ class App extends Component {
   };
 
   getValue = (e) => {
-    const name = e.target.name;
-    this.setState((prevState) => (prevState[name] = e.target.value));
+    const name = e.currentTarget.name;
+    this.setState({ [name]: e.currentTarget.value });
   };
 
   getContact = (e) => {
@@ -27,11 +27,12 @@ class App extends Component {
     );
     if (doubleContact) {
       alert(`${doubleContact.name} is already in contacts`);
+      this.resetState();
       return;
     }
-    this.setState(({ contacts, name, number }) => {
-      return contacts.push({ id: uuidv4(), name, number });
-    });
+    this.setState(({ contacts, name, number }) => ({
+      contacts: [...contacts, { id: uuidv4(), name, number }],
+    }));
     this.resetState();
   };
 
