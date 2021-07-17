@@ -39,31 +39,27 @@ class App extends Component {
   findContact = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    this.setState((state) => (state[name] = value));
-    this.setState((state) => {
-      const arrayOfContacts = [...state.contacts];
-      state.contacts = arrayOfContacts.filter((item) =>
+    this.setState((prevState) => (prevState[name] = value));
+    this.setState(({ contacts }) => ({
+      contacts: contacts.filter((item) =>
         item.name.toLowerCase().includes(value.toLowerCase())
-      );
-    });
+      ),
+    }));
   };
 
-  deleteContact = (e) => {
-    const target = e.target.name;
-    console.log("target: ", target);
-    this.setState((state) => {
-      state.contacts = state.contacts.filter((item) => {
-        return item.id !== target;
-      });
-    });
-    console.log(this.state.contacts);
+  deleteContact = (contactId) => {
+    this.setState(({ contacts }) => ({
+      contacts: contacts.filter((item) => {
+        return item.id !== contactId;
+      }),
+    }));
   };
 
   resetState = () => {
     return this.setState(
-      (state) =>
-        (state = {
-          contacts: [...state.contacts],
+      (prevState) =>
+        (prevState = {
+          contacts: [...prevState.contacts],
           filter: "",
           name: "",
           number: "",
@@ -117,10 +113,10 @@ class App extends Component {
           <ul>
             {contacts.map(({ id, name, number }) => (
               <li key={id}>
-                {name}: {number}{" "}
-                <button name={id} onClick={this.deleteContact}>
-                  Delete
-                </button>
+                <span>
+                  {name}: {number}
+                </span>
+                <button onClick={() => this.deleteContact(id)}>Delete</button>
               </li>
             ))}
           </ul>
