@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
+import ContactForm from "../ContactForm";
+import ContactList from "../ContactList";
+import Filter from "../Filter";
+import { Container } from "./App.styles";
 
 class App extends Component {
   state = {
@@ -10,30 +14,22 @@ class App extends Component {
       { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
     ],
     filter: "",
-    name: "",
-    number: "",
   };
 
-  getValue = (e) => {
-    const name = e.currentTarget.name;
-    this.setState({ [name]: e.currentTarget.value });
+  getFilter = (value) => {
+    this.setState({ filter: value });
   };
 
-  getContact = (e) => {
-    e.preventDefault();
+  getContact = ({ name, number }) => {
     const { contacts } = this.state;
-    const doubleContact = contacts.find(
-      (item) => item.name === e.target[0].value
-    );
+    const doubleContact = contacts.find((item) => item.name === name);
     if (doubleContact) {
       alert(`${doubleContact.name} is already in contacts`);
-      this.resetState();
       return;
     }
-    this.setState(({ contacts, name, number }) => ({
+    this.setState(({ contacts }) => ({
       contacts: [...contacts, { id: uuidv4(), name, number }],
     }));
-    this.resetState();
   };
 
   deleteContact = (contactId) => {
@@ -50,14 +46,12 @@ class App extends Component {
         (prevState = {
           contacts: [...prevState.contacts],
           filter: "",
-          name: "",
-          number: "",
         })
     );
   };
 
   render() {
-    const { name, contacts, number, filter } = this.state;
+    const { contacts, filter } = this.state;
 
     const normalizedFilter = filter.toLowerCase();
     const visibleContacts = contacts.filter((contact) =>
@@ -65,58 +59,17 @@ class App extends Component {
     );
 
     return (
-      <>
+      <Container>
         <h1>Phonebook</h1>
-        <form onSubmit={this.getContact}>
-          <label>
-            Name
-            <input
-              type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-              required
-              onChange={this.getValue}
-              value={name}
-            />
-          </label>
-          <label>
-            Number
-            <input
-              type="tel"
-              name="number"
-              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-              required
-              value={number}
-              onChange={this.getValue}
-            />
-          </label>
-          <button type="submit">Add contact</button>
-        </form>
+        <ContactForm submit={this.getContact} />
         <h2>Contacts</h2>
-        <label>
-          Find contacts by Name
-          <input
-            type="text"
-            name="filter"
-            value={filter}
-            onChange={this.getValue}
-          />
-        </label>
-        {contacts && (
-          <ul>
-            {visibleContacts.map(({ id, name, number }) => (
-              <li key={id}>
-                <span>
-                  {name}: {number}
-                </span>
-                <button onClick={() => this.deleteContact(id)}>Delete</button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </>
+        <Filter change={this.getFilter} filter={filter} />
+        <ContactList
+          contacts={contacts}
+          visibleContacts={visibleContacts}
+          getElement={this.deleteContact}
+        />
+      </Container>
     );
   }
 }
