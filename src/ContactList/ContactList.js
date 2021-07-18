@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Btn, ItemText, Item } from "./ContactListStyles";
 
 const ContactList = ({ contacts, visibleContacts, getElement }) => {
@@ -19,6 +20,12 @@ const ContactList = ({ contacts, visibleContacts, getElement }) => {
       </ul>
     )
   );
+};
+
+ContactList.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  visibleContacts: PropTypes.array.isRequired,
+  getElement: PropTypes.func.isRequired,
 };
 
 export default ContactList;

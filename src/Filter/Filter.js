@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Label, Message } from "./Filter.styles";
 
 const Filter = ({ change, filter, contacts }) => {
@@ -20,6 +21,12 @@ const Filter = ({ change, filter, contacts }) => {
   ) : (
     <Message>Your Phonebook don`t have contacts</Message>
   );
+};
+
+Filter.propTypes = {
+  change: PropTypes.func.isRequired,
+  filter: PropTypes.string.isRequired,
+  contacts: PropTypes.array.isRequired,
 };
 
 export default Filter;
