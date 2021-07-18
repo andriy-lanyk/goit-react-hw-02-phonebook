@@ -1,13 +1,13 @@
 import React from "react";
-import { Label } from "./Filter.styles";
+import { Label, Message } from "./Filter.styles";
 
-const Filter = ({ change, filter }) => {
+const Filter = ({ change, filter, contacts }) => {
   function getFilterValue(e) {
     const { value } = e.currentTarget;
     change(value);
   }
 
-  return (
+  return contacts.length !== 0 ? (
     <Label>
       Find contacts by Name
       <input
@@ -17,6 +17,8 @@ const Filter = ({ change, filter }) => {
         onChange={getFilterValue}
       />
     </Label>
+  ) : (
+    <Message>Your Phonebook don`t have contacts</Message>
   );
 };
 

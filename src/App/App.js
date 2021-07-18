@@ -58,7 +58,7 @@ class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm submit={this.getContact} />
         <h2>Contacts</h2>
-        <Filter change={this.getFilter} filter={filter} />
+        <Filter change={this.getFilter} filter={filter} contacts={contacts} />
         <ContactList
           contacts={contacts}
           visibleContacts={visibleContacts}
